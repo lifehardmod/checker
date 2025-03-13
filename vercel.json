@@ -1,8 +1,0 @@
-{
-  "build": {
-    "env": {
-      "PLAYWRIGHT_BROWSERS_PATH": "0"
-    }
-  },
-  "installCommand": "npm install && npx playwright install"
-}

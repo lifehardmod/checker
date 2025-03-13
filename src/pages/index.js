@@ -22,14 +22,11 @@ export default function Home() {
     fetch("/api/boj-status")
       .then((res) => res.json())
       .then((data) => {
-        // 반환된 데이터에 이름 정보를 추가 (하드코딩된 매핑)
-        const mergedData = Object.entries(data).reduce(
-          (acc, [user, result]) => {
-            acc[user] = { ...result, name: userInfo[user] || user };
-            return acc;
-          },
-          {}
-        );
+        // API 결과에 하드코딩된 이름을 병합
+        const mergedData = Object.entries(data).reduce((acc, [user, result]) => {
+          acc[user] = { ...result, name: userInfo[user] || user };
+          return acc;
+        }, {});
         setUsersData(mergedData);
         setIsLoading(false);
       })
@@ -47,28 +44,29 @@ export default function Home() {
     );
   }
 
-  // 일반 사용자 (짱성문 제외)
-  const normalUsers = Object.entries(usersData).filter(
-    ([, result]) => result.name !== "짱성문"
-  );
-  // 특별한 사용자 (짱성문)
+  // 특별 사용자 (예: 이름이 "짱성문")
   const specialUsers = Object.entries(usersData).filter(
     ([, result]) => result.name === "짱성문"
   );
+  // 일반 사용자
+  const normalUsers = Object.entries(usersData).filter(
+    ([, result]) => result.name !== "짱성문"
+  );
 
   return (
-    <div className=" bg-gray-50 p-8 flex flex-col gap-10 items-center">
+    <div className="min-h-screen bg-gray-50 p-8 flex flex-col gap-10 items-center">
       <h1 className="text-3xl font-bold text-center mb-8">BOJ 제출 현황</h1>
 
       {/* 특별 사용자 섹션 */}
       {specialUsers.length > 0 && (
-        <div className="flex flex-wrap justify-between gap-4">
+        <div className="w-full">
+          <h2 className="text-2xl font-bold text-center mb-6">특별 사용자</h2>
           {specialUsers.map(([user, result]) => (
             <div
               key={user}
-              className="py-3 bg-gradient-to-r from-purple-600 to-pink-500 rounded-lg shadow-xl text-white text-center transform transition hover:scale-105 h-fit w-fit px-16 mb-4 flex flex-col items-center gap"
+              className="py-3 bg-gradient-to-r from-purple-600 to-pink-500 rounded-lg shadow-xl text-white text-center transform transition hover:scale-105 h-fit w-fit px-16 mb-4"
             >
-              <h2 className="text-3xl font-extrabold">
+              <h2 className="text-3xl font-extrabold mb-4">
                 {result.name} ({user})
               </h2>
               <p className="text-xl">
@@ -90,16 +88,16 @@ export default function Home() {
       )}
 
       {/* 일반 사용자 카드 */}
-      <div className="flex flex-wrap justify-between gap-4 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 w-full">
         {normalUsers.map(([user, result]) => (
           <div
             key={user}
-            className="p-6 bg-white rounded-lg shadow-md flex flex-col items-center transform transition hover:scale-105 gap-1"
+            className="p-6 bg-white rounded-lg shadow-md flex flex-col items-center transform transition hover:scale-105 gap-2"
           >
             <h2 className="text-lg font-semibold">{result.name}</h2>
             <p className="text-gray-600 text-sm font-light">({user})</p>
             <p
-              className={`font-bold ${
+              className={`mt-4 font-bold ${
                 result.solved ? "text-green-600" : "text-red-600"
               }`}
             >
@@ -108,14 +106,10 @@ export default function Home() {
                 : "문제를 해결하지 않았습니다."}
             </p>
             {result.problemName && (
-              <p className="mt-2 text-sm text-gray-500">
-                문제: {result.problemName}
-              </p>
+              <p className="mt-2 text-sm text-gray-500">문제: {result.problemName}</p>
             )}
             {result.submissionTime && (
-              <p className="mt-2 text-sm text-gray-500">
-                제출 시간: {result.submissionTime}
-              </p>
+              <p className="mt-2 text-sm text-gray-500">제출 시간: {result.submissionTime}</p>
             )}
           </div>
         ))}
