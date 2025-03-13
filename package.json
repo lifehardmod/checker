@@ -22,13 +22,13 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4"
-  }
-  {
+  },
+  
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "postinstall": "npx playwright install",
     "start": "next start"
   }
-}
+
 }
