@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
+    "postinstall": "npx playwright install",
     "start": "next start",
     "lint": "next lint"
   },
@@ -22,13 +23,5 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4"
-  },
-  
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "postinstall": "npx playwright install",
-    "start": "next start"
   }
-
 }
