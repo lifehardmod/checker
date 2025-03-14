@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>오늘 문제 해결 현황</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-900 p-6">
+    <h1 class="text-2xl font-bold mb-6">오늘 문제 해결 현황</h1>
+    <div id="status-container" class="space-y-4"></div>
+
+    <script>
+      const userInfo = {
+        tjwndnjs7: "서주원",
+        kunzatt2501: "김용명",
+        codena_1025: "강수진",
+        hanahyun1: "한재서",
+        bsh7931: "배성훈",
+        jump6746: "김종명",
+        rkdwldms42: "강지은",
+        sktndid1203: "박수양",
+        t0mat0: "김유정",
+        zyu22: "지유림",
+      };
+
+      async function checkSolvedForUser(handle, name) {
+        try {
+          const response = await fetch(
+            `https://solved.ac/api/v3/user/grass?handle=${handle}&topic=default`
+          );
+          const data = await response.json();
+          const today = new Date().toISOString().slice(0, 10);
+          const todayEntry = data.grass.find((item) => item.date === today);
+          const container = document.getElementById("status-container");
+          const userStatus = document.createElement("div");
+          userStatus.className = "p-4 border border-gray-300 rounded shadow";
+
+          if (
+            todayEntry &&
+            todayEntry.value !== "frozen" &&
+            Number(todayEntry.value) > 0
+          ) {
+            userStatus.innerHTML = `<span class="font-semibold">${name}</span> (<span class="italic">${handle}</span>): <span class="text-green-600">문제 해결함</span>`;
+          } else {
+            userStatus.innerHTML = `<span class="font-semibold">${name}</span> (<span class="italic">${handle}</span>): <span class="text-red-600">아직 문제 해결 안 함</span>`;
+          }
+          container.appendChild(userStatus);
+        } catch (error) {
+          const container = document.getElementById("status-container");
+          const userStatus = document.createElement("div");
+          userStatus.className =
+            "p-4 border border-gray-300 rounded shadow text-gray-500";
+          userStatus.innerHTML = `<span class="font-semibold">${name}</span> (<span class="italic">${handle}</span>): 데이터 불러오기 오류`;
+          container.appendChild(userStatus);
+          console.error(`Error fetching data for ${name} (${handle}):`, error);
+        }
+      }
+
+      // 각 사용자에 대해 API 호출 및 UI 업데이트
+      Object.entries(userInfo).forEach(([handle, name]) => {
+        checkSolvedForUser(handle, name);
+      });
+    </script>
+  </body>
+</html>
